@@ -81,6 +81,8 @@ void mainThread()
 
 BOOL WINAPI DllMain(HANDLE hInstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
+	//
+
 	if (fdwReason == DLL_PROCESS_ATTACH) {
 		HANDLE hax = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)mainThread, 0, 0, 0);
 		CloseHandle(hax);
