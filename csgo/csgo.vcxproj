@@ -255,6 +255,7 @@
     </Deploy>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Address.cpp" />
     <ClCompile Include="Detour.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Hooks.cpp" />
@@ -262,6 +263,7 @@
     <ClCompile Include="csgo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Address.h" />
     <ClInclude Include="Detour.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Hooks.h" />

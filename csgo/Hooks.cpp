@@ -32,7 +32,7 @@ void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7)
 				float ewidth = eheight / 4.f;
 
 				player_info_t pinfo;
-				getPlayerInfo(VEngineClient013, i, &pinfo);
+				getPlayerInfo_f(VEngineClient013, i, &pinfo);
 				GetScreenSize(&width, &height);
 
 				if (ESPStatus)
@@ -157,8 +157,8 @@ void ForceMaterial(IMaterial* material, int color)
 {
 	if (material != NULL)
 	{
-		SetColorModulation(CVRenderViewAddr, color);
-		ForcedMaterialOverride(CModelRenderAddr, material);
+		SetColorModulation_f(CVRenderViewAddr, color);
+		ForcedMaterialOverride_f(CModelRenderAddr, material);
 	}
 }
 

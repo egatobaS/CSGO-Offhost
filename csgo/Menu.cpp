@@ -58,8 +58,8 @@ void openSub(int Menu, int client = NULL)
 void playerSub(int player)
 {
 	player_info_t pinfo;
-	getPlayerInfo(VEngineClient013, player, &pinfo);
-	if (strcmp(pinfo.name, "")) {
+	getPlayerInfo_f(VEngineClient013, player, &pinfo);
+	if (user_strcmp(pinfo.name, "")) {
 		MenuVars.currentMenu = (CLIENTS + 1) + player;
 	}
 }

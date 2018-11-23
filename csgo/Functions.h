@@ -1,55 +1,20 @@
 #pragma once
 
-extern VMatrix&(*WorldToScreenMatrix_f)(int pVEngineClient013);
-extern int(*GetScreenSize_f)(int pVEngineClient013, int* width, int* height);
-extern int(*GetLocalClientNumber_f)(int SomeStructure);
-extern int(*GetClientEntity_f)(int SomeStructure, int clientID);
-extern int(*GetHighestEntityIndex_f)(int SomeStructure);
-extern int(*isInGame_f)(int pVEngineClient013);
-extern int(*getPlayerInfo)(int pVEngineClient013, int id, player_info_t* info);
-extern void(*DrawShader)(int pVGUI_Surface031, int x1, int y1, int x2, int y2);
-extern void(*DrawLine)(int pVGUI_Surface031, int x1, int y1, int x2, int y2);
-extern void(*DrawSetColor)(int pVGUI_Surface031, int RGBA);
-extern void(*DrawSetTextColor)(int pVGUI_Surface031, int r, int g, int b, int a);
-extern void(*DrawSetTextPos)(int pVGUI_Surface031, int x, int y);
-extern void(*DrawSetTextFont)(int pVGUI_Surface031, int font);
-extern void(*DrawPrintText)(int pVGUI_Surface031, const wchar_t *text, int textLen, int drawType);
-extern void(*DrawOutlinedRect)(int pVGUI_Surface031, int x1, int y1, int x2, int y2);
-extern void DrawLineWithColor(int x0, int y0, int x1, int y1, int col);
+
+typedef void* (*CreateInterfaceFn)(const char *pName, int *pReturnCode);
+
 extern VMatrix& WorldToScreenMatrix();
-extern int GetScreenSize(int* width, int* height);
-extern int isInGame();
 extern void updateStructs();
 extern Vector vectoangles(Vector Angles);
-extern bool GetAsyncKeyState(int button);
-extern int GetLocalClientNumber();
-extern int GetClientEntity(int id);
-extern int GetHighestEntityIndex();
-extern void DrawText(const wchar_t* msg, int font, int x, int y, int r, int g, int b, int a, bool centered = false);
-extern void DrawRect(int x, int y, int w, int h, int col);
 extern bool WorldToScreen(const Vector &origin, Vector &screen);
-typedef void* (*CreateInterfaceFn)(const char *pName, int *pReturnCode);
 extern CreateInterfaceFn resolveImport(HMODULE module);
 extern void* get_interface(CreateInterfaceFn f, const char* szInterfaceVersion);
 extern bool EntityIsInvalid(CBaseEntity* Entity);
 extern const wchar_t *GetWC(const char *c);
-extern void(*SetViewAngles)(int VEngineClient013, QAngle &angles);
-extern void DrawBox(float x, float y, float width, float height, int RGBA);
-extern void(*GetViewAngles)(int pVEngineClient013, QAngle &angles);
-extern CUserCmd(*GetUserCmd)(int pCCInputAddr, int nSlot, int sequence_number);
-extern void PlayerBox(float x, float y, float w, float h, int clr);
 extern ICollideable* GetCollideable(int Entety);
 extern Vector GetBonePosition(DWORD EntityPtr, int BoneIndex);
-extern bool(*setupBones)(int hax, matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime);
 extern void renderMenu();
 extern void updatePlayerList();
 extern void HealthBar(Vector bot, Vector top, float health);
-extern void(*Cbuf_AddText)(int unk, char* cmd, int localClientNum);
-extern void(*DrawModelExecute)(int pCModelRender, void* ctx, void* state, ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
-extern int createRGBA(int r, int g, int b, int a);
-extern void(*ForcedMaterialOverride)(int pCModelRenderAddr, IMaterial* mat);
-extern void(*SetColorModulation)(int pCVRenderView, int blend);
-extern void(*LoadFromBuffer)(KeyValues* pKeyValues, const char* resourceName, const char* pBuffer, void* pFileSystem, const char* pPathID, void* pfnEvaluateSymbolProc);
-extern void(*InitKeyValues)(KeyValues* pKeyValues, const char* name);
 extern void DrawSkeleton(CBaseEntity* entity, int color);
 extern float menuColor;

@@ -52,7 +52,7 @@ void Detour::PatchInJump(unsigned int Address, void* Destination, bool Linked)
 
 	Instructions[3] = 0x4E800420 + Linked; // bctr bctrl
 
-	memcpy((void*)Address, (void*)Instructions, (sizeof(DWORD) * 4));
+	user_memcpy((void*)Address, (void*)Instructions, (sizeof(DWORD) * 4));
 }
 
 void Detour::DetourFunction(unsigned int Address, void* Destination, void* Stub)
@@ -76,7 +76,7 @@ void Detour::DetourFunction(unsigned int Address, void* Destination, void* Stub)
 
 	StubInstructions[7] = 0x4E800420;
 
-	memcpy((void*)SaveStubAddress, (void*)StubInstructions, sizeof(StubInstructions));
+	user_memcpy((void*)SaveStubAddress, (void*)StubInstructions, sizeof(StubInstructions));
 
 	PatchInJump(Address, Destination, false);
 }
@@ -124,7 +124,7 @@ void Detour::RestoreFunction()
 	if (Hooked) {
 		Hooked = false;
 
-		memcpy((void*)Address, (void*)OriginalBytes, 16);
+		user_memcpy((void*)Address, (void*)OriginalBytes, 16);
 	}
 }
 
@@ -139,7 +139,7 @@ void* Detour::HookFunction(unsigned int FuncAddress, unsigned int OurDestination
 
 	Address = FuncAddress;
 
-	memcpy((void*)OriginalBytes, (void*)Address, 16);
+	user_memcpy((void*)OriginalBytes, (void*)Address, 16);
 
 	DetourFunction((DWORD)Address, (void*)OurDestination, (DWORD*)(DWORD)&OrStub[0]);
 

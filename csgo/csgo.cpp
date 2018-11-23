@@ -25,7 +25,7 @@ void mainThread()
 				updateStructs();
 
 				//just some fun dvars, show fps etc
-				Cbuf_AddText(0, "gameinstructor_enable 0;mat_motion_blur_enabled 0;cl_showfps 4;net_graph 1;cl_viewmodel_shift_left_amt 1.5;cl_viewmodel_shift_right_amt 0.75;viewmodel_fov 68.000000;viewmodel_offset_x 0;viewmodel_offset_y 2.0;viewmodel_offset_z -2;viewmodel_presetpos 0;cl_bob_lower_amt 10;cl_bobamt_lat 0.4;cl_bobamt_vert 0.25;cl_bobcycle 0.980000;", 0);
+				Cbuf_AddText_f(0, "gameinstructor_enable 0;mat_motion_blur_enabled 0;cl_showfps 4;net_graph 1;cl_viewmodel_shift_left_amt 1.5;cl_viewmodel_shift_right_amt 0.75;viewmodel_fov 68.000000;viewmodel_offset_x 0;viewmodel_offset_y 2.0;viewmodel_offset_z -2;viewmodel_presetpos 0;cl_bob_lower_amt 10;cl_bobamt_lat 0.4;cl_bobamt_vert 0.25;cl_bobcycle 0.980000;", 0);
 
 				Initialized = true;
 			}
@@ -84,6 +84,18 @@ BOOL WINAPI DllMain(HANDLE hInstDLL, DWORD fdwReason, LPVOID lpReserved)
 	//
 
 	if (fdwReason == DLL_PROCESS_ATTACH) {
+
+		LoadAddresses();
+
+		PopulateVtables(&VEngineClient013,
+			&VGUI_Surface031,
+			&VClientEntityList003,
+			&CCInputAddr,
+			&ClientModeAddr,
+			&CModelRenderAddr,
+			&CVRenderViewAddr,
+			&KeyValuesAddr);
+
 		HANDLE hax = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)mainThread, 0, 0, 0);
 		CloseHandle(hax);
 		setupMenu();
