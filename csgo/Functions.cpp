@@ -255,16 +255,17 @@ void updateStructs()
 	auto engine = resolveImport(GetModuleHandleA("engine_360.dll"));
 
 	g_EntityList = (IClientEntityList*)get_interface(client, "VClientEntityList003");
-
 	EngineTrace = (IEngineTrace*)get_interface(engine, "EngineTraceClient004");
 
 	LocalPlayer = g_EntityList->GetClientEntity(GetLocalClientNumber());
 }
 
+wchar_t wc[0x2000];
+
 const wchar_t *GetWC(const char *c)
 {
 	const size_t cSize = strlen(c) + 1;
-	wchar_t* wc = new wchar_t[cSize];
+
 	mbstowcs(wc, c, cSize);
 
 	return wc;
@@ -410,6 +411,6 @@ void renderMenu() {
 			}
 		}
 	}
-	DrawTextWithBG("xbOnline Cheats Beta v1", 0xB7, 1110, 10, 0x2C, 0x8F, 0xED, 0xFF, false);
-	DrawTextWithBG(MenuVars.isOpen ? "Press B to close" : "Press DPAD UP & RS to open", 0xB7, 15, 695, 0x2C, 0x8F, 0xED, 0xFF, false);
+	DrawTextWithBG("xbOnline Cheats Beta v1", 0xB7, 1110, 10, 0x2C, 0x8F, 0xED, 0xFF, false, menuColor);
+	DrawTextWithBG(MenuVars.isOpen ? "Press B to close" : "Press DPAD UP & RS to open", 0xB7, 15, 695, 0x2C, 0x8F, 0xED, 0xFF, false, menuColor);
 }

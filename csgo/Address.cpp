@@ -59,20 +59,50 @@ int(*GetClientEntity)(int id);
 int(*GetHighestEntityIndex)();
 void(*drawCheckBox)(float centerX, float centerY, int checkColor, int outlineBoxColor, bool ticked);
 void(*DrawRectWithBorder)(float x, float y, float width, float height, int lineWidth, int rectColor, int borderColor);
-void(*DrawTextWithBG)(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered);
+void(*DrawTextWithBG)(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered, float menuColor);
 void(*PopulateVtables)(int* VEngineClient013, int* VGUI_Surface031, int* VClientEntityList003, int* CCInputAddr, int* ClientModeAddr, int* CModelRenderAddr, int* CVRenderViewAddr, int*  KeyValuesAddr);
+
+
+
+void SetViewAngles_f_Real(int pVEngineClient013, QAngle &angles)
+{
+	void(*SetViewAngles)(int pVEngineClient013, QAngle &angles) = (void(*)(int, QAngle&))addr->_0x8693BB40;
+	return SetViewAngles(pVEngineClient013, angles);
+}
+
+void GetViewAngles_f_Real(int pVEngineClient013, QAngle &angles)
+{
+	void(*GetViewAngles)(int pVEngineClient013, QAngle &angles) = (void(*)(int, QAngle&))addr->_0x8693BAF0;
+	return GetViewAngles(pVEngineClient013, angles);
+}
+
+CUserCmd GetUserCmd_f_Real(int pCCInputAddr, int nSlot, int sequence_number)
+{
+	CUserCmd(*GetUserCmd)(int pCCInputAddr, int nSlot, int sequence_number) = (CUserCmd(*)(int, int, int))addr->_0x88268EB0;
+
+	return GetUserCmd(pCCInputAddr, nSlot, sequence_number);
+}
+
+void DrawModelExecute_f_Real(int pCModelRender, void* ctx, void* state, ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld)
+{
+	void(*DrawModelExecute)(int pCModelRender, void* ctx, void* state, ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld) = (void(*)(int, void*, void*, ModelRenderInfo_t&, matrix3x4_t*))addr->_0x8699C368;
+	return DrawModelExecute(pCModelRender, ctx, state, pInfo, pCustomBoneToWorld);
+}
+
+
+VMatrix& WorldToScreenMatrix_f_Real(int pVEngineClient013)
+{
+	VMatrix&(*WorldToScreenMatrix_f)(int pVEngineClient013) = (VMatrix&(*)(int pVEngineClient013))addr->_0x869399F0;
+	return WorldToScreenMatrix_f(pVEngineClient013);
+}
+
+#if defined(DEVELOPERSDEVELOPERSDEVELOPERS)
 
 
 int GetLocalClientNumber_f_Real(int SomeStructure)
 {
 	int(*GetLocalClientNumber_f)(int SomeStructure) = (int(*)(int SomeStructure))addr->_0x86939560;
 	return GetLocalClientNumber_f(SomeStructure);
-}
-
-VMatrix& WorldToScreenMatrix_f_Real(int pVEngineClient013)
-{
-	VMatrix&(*WorldToScreenMatrix_f)(int pVEngineClient013) = (VMatrix&(*)(int pVEngineClient013))addr->_0x869399F0;
-	return WorldToScreenMatrix_f(pVEngineClient013);
 }
 
 int GetScreenSize_f_Real(int pVEngineClient013, int* width, int* height)
@@ -163,24 +193,6 @@ int GetFontName_f_Real(int pVGUI_Surface031, unsigned int font)
 	return GetFontName(pVGUI_Surface031, font);
 }
 
-void SetViewAngles_f_Real(int pVEngineClient013, QAngle &angles)
-{
-	void(*SetViewAngles)(int pVEngineClient013, QAngle &angles) = (void(*)(int, QAngle&))addr->_0x8693BB40;
-	return SetViewAngles(pVEngineClient013, angles);
-}
-
-void GetViewAngles_f_Real(int pVEngineClient013, QAngle &angles)
-{
-	void(*GetViewAngles)(int pVEngineClient013, QAngle &angles) = (void(*)(int, QAngle&))addr->_0x8693BAF0;
-	return GetViewAngles(pVEngineClient013, angles);
-}
-
-CUserCmd GetUserCmd_f_Real(int pCCInputAddr, int nSlot, int sequence_number)
-{
-	CUserCmd(*GetUserCmd)(int pCCInputAddr, int nSlot, int sequence_number) = (CUserCmd(*)(int, int, int))addr->_0x88268EB0;
-
-	return GetUserCmd(pCCInputAddr, nSlot, sequence_number);
-}
 
 bool setupBones_f_Real(int hax, matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime)
 {
@@ -200,12 +212,6 @@ void Cbuf_AddText_f_Real(int unk, char* cmd, int localClientNum)
 	void(*Cbuf_AddText)(int unk, char* cmd, int localClientNum) = (void(*)(int, char*, int))addr->_0x86A1A330;
 	return Cbuf_AddText(unk, cmd, localClientNum);
 
-}
-
-void DrawModelExecute_f_Real(int pCModelRender, void* ctx, void* state, ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld)
-{
-	void(*DrawModelExecute)(int pCModelRender, void* ctx, void* state, ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld) = (void(*)(int, void*, void*, ModelRenderInfo_t&, matrix3x4_t*))addr->_0x8699C368;
-	return DrawModelExecute(pCModelRender, ctx, state, pInfo, pCustomBoneToWorld);
 }
 
 void SetColorModulation_f_Real(int pCVRenderView, int blend)
@@ -310,7 +316,7 @@ void drawCheckBox_Real(float centerX, float centerY, int checkColor, int outline
 	DrawRect(centerX + 1, centerY + 1, 11, 11, ticked ? 0x00FF007D : 0xFF00007D);
 }
 
-void DrawTextWithBG_Real(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered)
+void DrawTextWithBG_Real(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered, float menuColor)
 {
 	int TextWidth = 0, TextHeight = 0, lineWidth = 3;
 	GetTextSize_f(VGUI_Surface031, fontName, GetWC(text), &TextWidth, &TextHeight);
@@ -345,6 +351,7 @@ int GetHighestEntityIndex_Real()
 	return GetHighestEntityIndex_f(VClientEntityList003);
 }
 
+#endif
 
 extern "C"
 {
@@ -387,9 +394,24 @@ void* HookFunction_Real(Detour* a, void* b, void* c)
 
 }
 
+unsigned int ReverseInt(unsigned int val)
+{
+	int RetVal = ((val << 24)) | (((val << 8) & 0x00ff0000)) | (((val >> 8) & 0x0000ff00)) | (((val >> 24) & 0x000000ff));
+
+	return (RetVal + 0x90E00000);
+}
 
 void LoadAddresses()
 {
+	WorldToScreenMatrix_f = (VMatrix&(*)(int pVEngineClient013))WorldToScreenMatrix_f_Real;
+	GetUserCmd_f = (CUserCmd(*)(int pCCInputAddr, int nSlot, int sequence_number))GetUserCmd_f_Real;
+	DrawModelExecute_f = (void(*)(int pCModelRender, void* ctx, void* state, ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld))DrawModelExecute_f_Real;
+	GetViewAngles_f = (void(*)(int pVEngineClient013, QAngle &angles))GetViewAngles_f_Real;
+	SetViewAngles_f = (void(*)(int VEngineClient013, QAngle &angles))SetViewAngles_f_Real;
+
+
+#if defined(DEVELOPERSDEVELOPERSDEVELOPERS)
+
 	GetDetour = (Detour*(*)())GetDetours_Real;
 
 	user_memcpy = (void*(*)(void*, void*, size_t))memcpy;
@@ -438,11 +460,70 @@ void LoadAddresses()
 	GetHighestEntityIndex = (int(*)())GetHighestEntityIndex_Real;
 	drawCheckBox = (void(*)(float centerX, float centerY, int checkColor, int outlineBoxColor, bool ticked))drawCheckBox_Real;
 	DrawRectWithBorder = (void(*)(float x, float y, float width, float height, int lineWidth, int rectColor, int borderColor))DrawRectWithBorder_Real;
-	DrawTextWithBG = (void(*)(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered))DrawTextWithBG_Real;
+	DrawTextWithBG = (void(*)(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered, float menuColor))DrawTextWithBG_Real;
 	PopulateVtables = (void(*)(int* VEngineClient013, int* VGUI_Surface031, int* VClientEntityList003, int* CCInputAddr, int* ClientModeAddr, int* CModelRenderAddr, int* CVRenderViewAddr, int*  KeyValuesAddr))PopulateVtables_Real;
 
 	addr = new csgo_addr_offhost_s;
 
 	addr->SetAddress();
 
+#else
+
+	GAME_ADDRESS_TRANSFER_CSGO* Game_Functions = (GAME_ADDRESS_TRANSFER_CSGO*)ReverseInt(HVGetVersionsPeekDWORD(0x800001000000BEE0));
+	SYS_FUNCTION_ADDRESS* Sys_Functions = (SYS_FUNCTION_ADDRESS*)ReverseInt(HVGetVersionsPeekDWORD(0x800001000000BED8));
+
+	if (Sys_Functions)
+	{
+		GetDetour = (Detour*(*)())Sys_Functions->GetDetours;
+		XNotify = (void(*)(wchar_t*))Sys_Functions->XNotify;
+
+		user_memcpy = (void*(*)(void*, void*, size_t))Sys_Functions->memcpy;
+		user_strcpy = (char*(*)(char*, const char*))Sys_Functions->strcpy;
+		user_memset = (void*(*)(void*, int, size_t))Sys_Functions->memset;
+		user_strcmp = (int(*)(const char*, const char*))Sys_Functions->strcmp;
+
+		xbOHookFunction = (void*(*)(Detour* a, void* b, void* c))Sys_Functions->HookFunction;
+	}
+
+	if (Game_Functions)
+	{
+		addr = Game_Functions->addr;
+
+		GetScreenSize_f = (int(*)(int pVEngineClient013, int* width, int* height))ReverseInt((int)Game_Functions->GetScreenSize_f);
+		GetLocalClientNumber_f = (int(*)(int SomeStructure))ReverseInt((int)Game_Functions->GetLocalClientNumber_f);
+		GetClientEntity_f = (int(*)(int SomeStructure, int clientID))ReverseInt((int)Game_Functions->GetClientEntity_f);
+		GetHighestEntityIndex_f = (int(*)(int SomeStructure))ReverseInt((int)Game_Functions->GetHighestEntityIndex_f);
+		isInGame_f = (int(*)(int pVEngineClient013))ReverseInt((int)Game_Functions->isInGame_f);
+		getPlayerInfo_f = (int(*)(int pVEngineClient013, int id, player_info_t* info))ReverseInt((int)Game_Functions->getPlayerInfo_f);
+		DrawShader_f = (void(*)(int pVGUI_Surface031, int x1, int y1, int x2, int y2))ReverseInt((int)Game_Functions->DrawShader_f);
+		DrawLine_f = (void(*)(int pVGUI_Surface031, int x1, int y1, int x2, int y2))ReverseInt((int)Game_Functions->DrawLine_f);
+		DrawSetColor_f = (void(*)(int pVGUI_Surface031, int RGBA))ReverseInt((int)Game_Functions->DrawSetColor_f);
+		DrawSetTextColor_f = (void(*)(int pVGUI_Surface031, int r, int g, int b, int a))ReverseInt((int)Game_Functions->DrawSetTextColor_f);
+		DrawSetTextPos_f = (void(*)(int pVGUI_Surface031, int x, int y))ReverseInt((int)Game_Functions->DrawSetTextPos_f);
+		DrawSetTextFont_f = (void(*)(int pVGUI_Surface031, int font))ReverseInt((int)Game_Functions->DrawSetTextFont_f);
+		DrawPrintText_f = (void(*)(int pVGUI_Surface031, const wchar_t *text, int textLen, int drawType))ReverseInt((int)Game_Functions->DrawPrintText_f);
+		DrawOutlinedRect_f = (void(*)(int pVGUI_Surface031, int x1, int y1, int x2, int y2))ReverseInt((int)Game_Functions->DrawOutlinedRect_f);
+		setupBones_f = (bool(*)(int hax, matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime))ReverseInt((int)Game_Functions->setupBones_f);
+		Cbuf_AddText_f = (void(*)(int unk, char* cmd, int localClientNum))ReverseInt((int)Game_Functions->Cbuf_AddText_f);
+		ForcedMaterialOverride_f = (void(*)(int pCModelRenderAddr, IMaterial* mat))ReverseInt((int)Game_Functions->ForcedMaterialOverride_f);
+		SetColorModulation_f = (void(*)(int pCVRenderView, int blend))ReverseInt((int)Game_Functions->SetColorModulation_f);
+		GetTextSize_f = (void(*)(int pVGUI_Surface031, int font, const wchar_t *text, int* wide, int* tall))ReverseInt((int)Game_Functions->GetTextSize_f);
+		DrawLineWithColor = (void(*)(int x0, int y0, int x1, int y1, int col))ReverseInt((int)Game_Functions->DrawLineWithColor);
+		DrawText = (void(*)(const wchar_t* msg, int font, int x, int y, int r, int g, int b, int a, bool centered))ReverseInt((int)Game_Functions->DrawText);
+		DrawRect = (void(*)(int x, int y, int w, int h, int col))ReverseInt((int)Game_Functions->DrawRect);
+		createRGBA = (int(*)(int r, int g, int b, int a))ReverseInt((int)Game_Functions->createRGBA);
+		DrawBox = (void(*)(float x, float y, float width, float height, int RGBA))ReverseInt((int)Game_Functions->DrawBox);
+		PlayerBox = (void(*)(float x, float y, float w, float h, int clr))ReverseInt((int)Game_Functions->PlayerBox);
+		GetAsyncKeyState = (bool(*)(int button))ReverseInt((int)Game_Functions->GetAsyncKeyState);
+		GetScreenSize = (int(*)(int* width, int* height))ReverseInt((int)Game_Functions->GetScreenSize);
+		isInGame = (int(*)())ReverseInt((int)Game_Functions->isInGame);
+		GetLocalClientNumber = (int(*)())ReverseInt((int)Game_Functions->GetLocalClientNumber);
+		GetClientEntity = (int(*)(int id))ReverseInt((int)Game_Functions->GetClientEntity);
+		GetHighestEntityIndex = (int(*)())ReverseInt((int)Game_Functions->GetHighestEntityIndex);
+		drawCheckBox = (void(*)(float centerX, float centerY, int checkColor, int outlineBoxColor, bool ticked))ReverseInt((int)Game_Functions->drawCheckBox);
+		DrawRectWithBorder = (void(*)(float x, float y, float width, float height, int lineWidth, int rectColor, int borderColor))ReverseInt((int)Game_Functions->DrawRectWithBorder);
+		DrawTextWithBG = (void(*)(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered, float menuColor))ReverseInt((int)Game_Functions->DrawTextWithBG);
+		PopulateVtables = (void(*)(int* VEngineClient013, int* VGUI_Surface031, int* VClientEntityList003, int* CCInputAddr, int* ClientModeAddr, int* CModelRenderAddr, int* CVRenderViewAddr, int*  KeyValuesAddr))ReverseInt((int)Game_Functions->PopulateVtables);
+	}
+#endif	
 }

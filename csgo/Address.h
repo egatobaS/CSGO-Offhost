@@ -9,16 +9,15 @@ extern int CModelRenderAddr;
 extern int CVRenderViewAddr;
 extern int KeyValuesAddr;
 
-
 struct SYS_FUNCTION_ADDRESS
 {
 	void* HookFunction;
 	void* XNotify;
-	void* user_memcpy;
-	void* user_memset;
-	void* user_strcpy;
+	void* memcpy;
+	void* memset;
+	void* strcpy;
 	void* memcmp;
-	void* user_strcmp;
+	void* strcmp;
 	void* Sleep;
 	void* MmIsAddressValid;
 	void* FIsMmIoAddress;
@@ -149,31 +148,47 @@ struct GAME_ADDRESS_TRANSFER_CSGO
 {
 	csgo_addr_offhost_s* addr;
 
-	void* GetLocalClientNumber_f;
 	void* WorldToScreenMatrix_f;
+	void* GetUserCmd_f;
+	void* DrawModelExecute_f;
+	void* GetViewAngles_f;
+	void* SetViewAngles_f;
 	void* GetScreenSize_f;
+	void* GetLocalClientNumber_f;
 	void* GetClientEntity_f;
 	void* GetHighestEntityIndex_f;
 	void* isInGame_f;
-	void* getPlayerInfo;
-	void* DrawShader;
-	void* DrawLine;
-	void* DrawSetColor;
-	void* DrawSetTextColor;
-	void* DrawSetTextPos;
-	void* DrawSetTextFont;
-	void* DrawPrintText;
-	void* DrawOutlinedRect;
-	void* GetFontName;
-	void* SetViewAngles;
-	void* GetViewAngles;
-	void* GetUserCmd;
-	void* setupBones;
-	void* GetTextSiz;
-	void* Cbuf_AddText;
-	void* DrawModelExecute;
-	void* SetColorModulation;
-	void* ForcedMaterialOverride;
+	void* getPlayerInfo_f;
+	void* DrawShader_f;
+	void* DrawLine_f;
+	void* DrawSetColor_f;
+	void* DrawSetTextColor_f;
+	void* DrawSetTextPos_f;
+	void* DrawSetTextFont_f;
+	void* DrawPrintText_f;
+	void* DrawOutlinedRect_f;
+	void* setupBones_f;
+	void* Cbuf_AddText_f;
+	void* ForcedMaterialOverride_f;
+	void* SetColorModulation_f;
+	void* GetTextSize_f;
+	void* DrawLineWithColor;
+	void* DrawText;
+	void* DrawRect;
+	void* createRGBA;
+	void* DrawBox;
+	void* PlayerBox;
+	void* GetAsyncKeyState;
+	void* GetScreenSize;
+	void* isInGame;
+	void* GetLocalClientNumber;
+	void* GetClientEntity;
+	void* GetHighestEntityIndex;
+	void* drawCheckBox;
+	void* DrawRectWithBorder;
+	void* DrawTextWithBG;
+	void* PopulateVtables;
+
 
 };
 
@@ -227,15 +242,20 @@ extern int(*GetClientEntity)(int id);
 extern int(*GetHighestEntityIndex)();
 extern void(*drawCheckBox)(float centerX, float centerY, int checkColor, int outlineBoxColor, bool ticked);
 extern void(*DrawRectWithBorder)(float x, float y, float width, float height, int lineWidth, int rectColor, int borderColor);
-extern void(*DrawTextWithBG)(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered);
+extern void(*DrawTextWithBG)(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered, float menuColor);
 extern void(*PopulateVtables)(int* VEngineClient013, int* VGUI_Surface031, int* VClientEntityList003, int* CCInputAddr, int* ClientModeAddr, int* CModelRenderAddr, int* CVRenderViewAddr, int*  KeyValuesAddr);
 
 //LocalFunctions
+
+
 VMatrix& WorldToScreenMatrix_f_Real(int pVEngineClient013);
 CUserCmd GetUserCmd_f_Real(int pCCInputAddr, int nSlot, int sequence_number);
 void SetViewAngles_f_Real(int pVEngineClient013, QAngle &angles);
 void GetViewAngles_f_Real(int pVEngineClient013, QAngle &angles);
 void DrawModelExecute_f_Real(int pCModelRender, void* ctx, void* state, ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
+
+#if defined(DEVELOPERSDEVELOPERSDEVELOPERS)
+
 int GetLocalClientNumber_f_Real(int SomeStructure);
 int GetScreenSize_f_Real(int pVEngineClient013, int* width, int* height);
 int GetClientEntity_f_Real(int SomeStructure, int clientID);
@@ -271,8 +291,10 @@ int GetClientEntity_Real(int id);
 int GetHighestEntityIndex_Real();
 void drawCheckBox_Real(float centerX, float centerY, int checkColor, int outlineBoxColor, bool ticked);
 void DrawRectWithBorder_Real(float x, float y, float width, float height, int lineWidth, int rectColor, int borderColor);
-void DrawTextWithBG_Real(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered = false);
+void DrawTextWithBG_Real(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered, float menuColor);
 void PopulateVtables_Real(int* VEngineClient013, int* VGUI_Surface031, int* VClientEntityList003, int* CCInputAddr, int* ClientModeAddr, int* CModelRenderAddr, int* CVRenderViewAddr, int*  KeyValuesAddr);
+
+#endif
 
 void LoadAddresses();
 

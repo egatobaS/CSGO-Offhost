@@ -5,6 +5,8 @@
 #include <setjmp.h>
 #include <cmath>
 
+//#define DEVELOPERSDEVELOPERSDEVELOPERS 1
+
 #include "Detour.h"
 #include "Vector.h"
 #include "IVModelInfo.h"
