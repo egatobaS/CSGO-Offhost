@@ -17,9 +17,10 @@ bool Initialized = false;
 
 void mainThread()
 {
-	printf("Module Loaded\n");
-
 	LoadAddresses();
+
+	XNotify(L"xbOnline CSGO Cheats Loaded!\n");
+
 
 	PopulateVtables(&VEngineClient013,
 		&VGUI_Surface031,
@@ -86,8 +87,8 @@ void mainThread()
 				}
 			}
 			
-			if (CurrentMenu == CLIENTS)
-				updatePlayerList();
+			//if (CurrentMenu == CLIENTS)
+			//	updatePlayerList();
 			
 
 			Sleep(5);

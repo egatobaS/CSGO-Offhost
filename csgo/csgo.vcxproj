@@ -213,7 +213,7 @@
       <AdditionalOptions>/dll /ALIGN:128,4096 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Deploy>
-      <DeploymentType>CopyToHardDrive</DeploymentType>
+      <DeploymentType>EmulateDvd</DeploymentType>
       <Progress>true</Progress>
       <ForceCopy>true</ForceCopy>
     </Deploy>

@@ -74,7 +74,7 @@ void setupMenu() {
 	addMenu("CSGO Menu", MAIN);
 	addOption("Aimbot Menu", NULL, openSub, AIMBOT);
 	addOption("ESP Menu", NULL, openSub, ESP);
-	addOption("Client List", NULL, openSub, CLIENTS);
+	//addOption("Client List", NULL, openSub, CLIENTS);
 
 	addMenu("Aimbot Menu", AIMBOT, 0);
 	addOption("Aimbot Status", &bAimbot);
@@ -90,20 +90,20 @@ void setupMenu() {
 	addOption("Draw Snaplines", &bSnaplines);
 	addOption("Draw Bones", &bSkeleton);
 
-	addMenu("Clients", CLIENTS, 0);
-	addOption("Not Connected", NULL, &playerSub, 0);
-	addOption("Not Connected", NULL, &playerSub, 1);
-	addOption("Not Connected", NULL, &playerSub, 2);
-	addOption("Not Connected", NULL, &playerSub, 3);
-	addOption("Not Connected", NULL, &playerSub, 4);
-	addOption("Not Connected", NULL, &playerSub, 5);
-	addOption("Not Connected", NULL, &playerSub, 6);
-	addOption("Not Connected", NULL, &playerSub, 7);
-	addOption("Not Connected", NULL, &playerSub, 8);
-	addOption("Not Connected", NULL, &playerSub, 9);
-
-	for (int i = 0; i < 10; i++)
-	{
-		AddPlayerMenu(i);
-	}
+	//addMenu("Clients", CLIENTS, 0);
+	//addOption("Not Connected", NULL, &playerSub, 0);
+	//addOption("Not Connected", NULL, &playerSub, 1);
+	//addOption("Not Connected", NULL, &playerSub, 2);
+	//addOption("Not Connected", NULL, &playerSub, 3);
+	//addOption("Not Connected", NULL, &playerSub, 4);
+	//addOption("Not Connected", NULL, &playerSub, 5);
+	//addOption("Not Connected", NULL, &playerSub, 6);
+	//addOption("Not Connected", NULL, &playerSub, 7);
+	//addOption("Not Connected", NULL, &playerSub, 8);
+	//addOption("Not Connected", NULL, &playerSub, 9);
+	//
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	AddPlayerMenu(i);
+	//}
 }
