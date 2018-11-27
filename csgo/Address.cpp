@@ -326,6 +326,35 @@ void DrawTextWithBG_Real(const char *text, int fontName, float x, float y, int r
 	DrawText(GetWC(text), fontName, x, y, r, g, b, a, centered);
 }
 
+extern "C"
+{
+	PVOID MmGetPhysicalAddress(PVOID Address);
+	UCHAR KeGetCurrentProcessType(VOID);
+	DWORD XamUserGetName(DWORD dwUserIndex, LPSTR pUserName, DWORD cchUserName);
+}
+
+FARPROC ResolveFunction(PCHAR ModuleName, DWORD Ordinal)
+{
+	HMODULE mHandle = GetModuleHandle(ModuleName);
+	return (mHandle == NULL) ? NULL : GetProcAddress(mHandle, (LPCSTR)Ordinal);
+}
+
+VOID(*XNotifyQueueUI)(DWORD dwType, DWORD dwUserIndex, DWORD dwPriority, LPCWSTR pwszStringParam, ULONGLONG qwParam) = (VOID(*)(DWORD, DWORD, DWORD, LPCWSTR, ULONGLONG))ResolveFunction("xam.xex", 0x290);
+
+VOID XNotifyThread(PWCHAR NotifyText)
+{
+	XNotifyQueueUI(14, 0, 2, NotifyText, NULL);
+}
+
+VOID XNotify_Real(PWCHAR NotifyText)
+{
+	if (KeGetCurrentProcessType() != 1)
+	{
+		CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)XNotifyThread, (LPVOID)NotifyText, 0, NULL);
+	}
+	else { XNotifyThread(NotifyText); }
+}
+
 int GetScreenSize_Real(int* width, int* height)
 {
 	return GetScreenSize_f(VEngineClient013, width, height);
@@ -352,11 +381,6 @@ int GetHighestEntityIndex_Real()
 }
 
 #endif
-
-extern "C"
-{
-	PVOID MmGetPhysicalAddress(PVOID Address);
-}
 
 __int64 __declspec(naked) HvxGetVersion(unsigned int key, __int64 type, __int64 SourceAddress, __int64 DestAddress, __int64 lenInBytes)
 {
@@ -462,6 +486,7 @@ void LoadAddresses()
 	DrawRectWithBorder = (void(*)(float x, float y, float width, float height, int lineWidth, int rectColor, int borderColor))DrawRectWithBorder_Real;
 	DrawTextWithBG = (void(*)(const char *text, int fontName, float x, float y, int r, int g, int b, int a, bool centered, float menuColor))DrawTextWithBG_Real;
 	PopulateVtables = (void(*)(int* VEngineClient013, int* VGUI_Surface031, int* VClientEntityList003, int* CCInputAddr, int* ClientModeAddr, int* CModelRenderAddr, int* CVRenderViewAddr, int*  KeyValuesAddr))PopulateVtables_Real;
+	XNotify = (void(*)(wchar_t*))XNotify_Real;
 
 	addr = new csgo_addr_offhost_s;
 

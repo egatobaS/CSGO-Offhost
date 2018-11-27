@@ -8,54 +8,84 @@ void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7)
 
 	renderMenu();
 
-	for (int i = 0; i < g_EntityList->GetHighestEntityIndex(); i++)
+	if (IsInGame())
 	{
-		__try {
-			CBaseEntity* Entity = g_EntityList->GetClientEntity(i);
-
-			if (EntityIsInvalid(Entity))
-				continue;
-
-			Vector Origin = Entity->GetOrigin();
-			Vector Screen, top;
-			int width, height;
-
-			Vector max = GetCollideable((int)Entity)->OBBMaxs();
-			Vector top3D = Origin + Vector(0, 0, max.z);
-
-			if (WorldToScreen(Origin, Screen) &&
-				WorldToScreen(top3D, top))
+		for (int i = 0; i < g_EntityList->GetHighestEntityIndex(); i++)
+		{
+			__try
 			{
-				int espColor = !Entity->IsEnemy() ? 0x00FF00FF : 0xFF0000FF;
-
-				float eheight = (Screen.y - top.y);
-				float ewidth = eheight / 4.f;
-
-				player_info_t pinfo;
-				getPlayerInfo_f(VEngineClient013, i, &pinfo);
-				GetScreenSize(&width, &height);
-
-				if (ESPStatus)
+				CBaseEntity* Entity = g_EntityList->GetClientEntity(i);
+				IClientNetworkable* pNetworkable;
+				ClientClass* Client;
+				if (Entity)
 				{
-					if (bSnaplines)
-						DrawLineWithColor(Screen.x, Screen.y, width / 2, height - 30, espColor);
-					if (bNames)
-						DrawText(GetWC(pinfo.name), 0xB7, top.x, top.y - 17, 0xFF, 0xFF, 0xFF, 0xFF, true);
-					if (b2DBoxes)
-					{
-						PlayerBox(top.x, top.y, ewidth, eheight, espColor);
-						HealthBar(Screen, top, Entity->GetHealth());
+					pNetworkable = g_EntityList->GetClientNetworkable(i);
+					Client = pNetworkable->GetClientClass();
+					const char* entityName = GetEntityName(Client->m_ClassID);
 
-						char armorValue[0x52] = { 0 };
-						_snprintf(armorValue, 0x52, "Armor: %d", Entity->GetArmor());
-						DrawText(GetWC(armorValue), 0xB7, Screen.x, Screen.y, 0xFF, 0xFF, 0xFF, 0xFF, true);
+					if (!pNetworkable->IsDormant() && Entity != LocalPlayer && strcmp(entityName, ""))
+					{
+						Vector Origin = Entity->GetOrigin();
+						Vector Screen, top;
+						int width, height;
+
+						if (Origin.y == 0x00)
+							continue;
+
+						Vector max = GetCollideable((int)Entity)->OBBMaxs();
+						Vector top3D = Origin + Vector(0, 0, max.z);
+
+						if (WorldToScreen(Origin, Screen) &&
+							WorldToScreen(top3D, top))
+						{
+							float eheight = (Screen.y - top.y);
+							float ewidth = eheight / 4.f;
+
+							player_info_t pinfo;
+							if (!Entity->GetHealth() <= 0 && !Entity->GetAlive())
+							{
+								getPlayerInfo_f(VEngineClient013, i, &pinfo);
+								GetScreenSize(&width, &height);
+							}
+
+							if (ESPStatus)
+							{
+								if (i <= 64) //Entity is player
+								{
+									if (!Entity->GetHealth() <= 0 && !Entity->GetAlive())
+									{
+										int espColor = !Entity->IsEnemy() ? 0x00FF00FF : 0xFF0000FF;
+
+										if (bSnaplines)
+											DrawLineWithColor(Screen.x, Screen.y, width / 2, height - 30, espColor);
+										if (bNames)
+											DrawText(GetWC(pinfo.name), 0xB7, top.x, top.y - 17, 0xFF, 0xFF, 0xFF, 0xFF, true);
+										if (b2DBoxes)
+										{
+											PlayerBox(top.x, top.y, ewidth, eheight, espColor);
+											HealthBar(Screen, top, Entity->GetHealth());
+
+											char armorValue[0x52] = { 0 };
+											_snprintf(armorValue, 0x52, "Armor: %d", Entity->GetArmor());
+											DrawText(Entity->GetArmor() <= 0 ? L"Armor: 0" : GetWC(armorValue), 0xB7, top.x, Screen.y, 0xFF, 0xFF, 0xFF, 0xFF, true);
+										}
+										if (bSkeleton)
+											DrawSkeleton(Entity, espColor);
+									}
+								}
+								else
+								{
+									if (bEntityESP)
+										DrawText(GetWC(entityName), 0xB7, top.x, top.y - 17, 0xFF, 0xFF, 0xFF, 0xFF, true);
+								}
+							}
+						}
 					}
-					if (bSkeleton)
-						DrawSkeleton(Entity, espColor);
 				}
 			}
-		}
-		__except (1) {
+			__except (1)
+			{
+			}
 		}
 	}
 
@@ -66,64 +96,52 @@ Detour CreateMoveDetour;
 CreateMoveStub CreateMoveOriginal;
 bool CreateMoveHook(int pClientModeAddr, float flInputSampleTime, CUserCmd* cmd)
 {
-	for (int i = 0; i < g_EntityList->GetHighestEntityIndex(); i++)
+	if (IsInGame())
 	{
-		__try {
+		for (int i = 0; i < g_EntityList->GetHighestEntityIndex(); i++)
+		{
+			__try {
 
-			CBaseEntity* Entity = g_EntityList->GetClientEntity(i);
-
-			if (EntityIsInvalid(Entity))
-				continue;
-
-			if (bAimbot)
-			{
-				if (!Entity->GetDormant() && !Entity->GetAlive() && Entity->IsEnemy())
+				CBaseEntity* Entity = g_EntityList->GetClientEntity(i);
+				IClientNetworkable* pNetworkable;
+				ClientClass* Client;
+				if (Entity)
 				{
-					Vector aimPos = GetBonePosition((int)Entity, 5);
-					Vector FinalAngles = vectoangles(aimPos - LocalPlayer->GetEyePosition());
-					QAngle aim_angle = QAngle(FinalAngles.x, FinalAngles.y, FinalAngles.z);
+					pNetworkable = g_EntityList->GetClientNetworkable(i);
+					Client = pNetworkable->GetClientClass();
+				}
 
-					if (Entity->IsVisible(5))
+				if (bAimbot)
+				{
+					if (!pNetworkable->IsDormant() && !EntityIsInvalid(Entity) && Entity->IsEnemy())
 					{
-						if (!bAimkey || GetAsyncKeyState(0x1338))
+						Vector aimPos = Entity->GetPredicted(GetBonePosition((int)Entity, 5));
+						Vector FinalAngles = vectoangles(aimPos - LocalPlayer->GetEyePosition());
+						QAngle aim_angle = QAngle(FinalAngles.x, FinalAngles.y, FinalAngles.z);
+						QAngle AimPunch = *(QAngle*)(&LocalPlayer->GetPunch()) * 2.f;
+
+						if (Entity->IsVisible(5))
 						{
-							cmd->viewangles = aim_angle -= LocalPlayer->GetPunch() * 2.f;
-							if (bAutoAim)
-								cmd->buttons |= 4;
+							if (!bAimkey || GetAsyncKeyState(0x1337))
+							{
+								cmd->viewangles = aim_angle - AimPunch;
+
+								if (bAutoAim)
+									cmd->buttons |= 4;
+							}
 						}
 					}
 				}
-			}
 
-			//as of right now, there is a bug with this vv auto bunny hop
-			static bool bLastJumped = false;
-			static bool bShouldFake = false;
-
-			if (!bLastJumped && bShouldFake)
-			{
-				bShouldFake = false;
-				cmd->buttons |= IN_JUMP;
-			}
-			else if (cmd->buttons & IN_JUMP)
-			{
-				if (LocalPlayer->GetFlags() & FL_ONGROUND)
+				//BunnyHop
+				if (bBhop)
 				{
-					bLastJumped = true;
-					bShouldFake = true;
-				}
-				else
-				{
-					cmd->buttons &= ~IN_JUMP;
-					bLastJumped = false;
+					if ((cmd->buttons & IN_JUMP) && !(LocalPlayer->GetFlags() & FL_ONGROUND))
+						cmd->buttons &= ~IN_JUMP;
 				}
 			}
-			else
-			{
-				bLastJumped = false;
-				bShouldFake = false;
+			__except (1) {
 			}
-		}
-		__except (1) {
 		}
 	}
 

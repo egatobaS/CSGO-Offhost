@@ -19,7 +19,7 @@ void mainThread()
 {
 	LoadAddresses();
 
-	XNotify(L"xbOnline CSGO Cheats Loaded!\n");
+	XNotify(L"xbOnline CSGO Cheats Loaded!\nDeveloped by Blasts Mods");
 
 
 	PopulateVtables(&VEngineClient013,
@@ -43,7 +43,8 @@ void mainThread()
 				updateStructs();
 	
 				//just some fun dvars, show fps etc
-				Cbuf_AddText_f(0, "gameinstructor_enable 0;mat_motion_blur_enabled 0;cl_showfps 4;net_graph 1;cl_viewmodel_shift_left_amt 1.5;cl_viewmodel_shift_right_amt 0.75;viewmodel_fov 68.000000;viewmodel_offset_x 0;viewmodel_offset_y 2.0;viewmodel_offset_z -2;viewmodel_presetpos 0;cl_bob_lower_amt 10;cl_bobamt_lat 0.4;cl_bobamt_vert 0.25;cl_bobcycle 0.980000;", 0);
+				Cbuf_AddText_f(0, "gameinstructor_enable 0;mat_motion_blur_enabled 0;cl_showfps 4;net_graph 1;cl_viewmodel_shift_left_amt 1.5;cl_viewmodel_shift_right_amt 0.75;viewmodel_fov 64.000000;viewmodel_offset_x 0;viewmodel_offset_y 2.0;viewmodel_offset_z -2;viewmodel_presetpos 0;cl_bob_lower_amt 10;cl_bobamt_lat 0.4;cl_bobamt_vert 0.25;cl_bobcycle 0.980000;", 0);
+				Cbuf_AddText_f(0, "rate 786432;cl_cmdrate 128;cl_interp 0;cl_interp_ratio 1;", 0);
 	
 				Initialized = true;
 			}

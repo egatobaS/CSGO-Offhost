@@ -18,3 +18,7 @@ extern void updatePlayerList();
 extern void HealthBar(Vector bot, Vector top, float health);
 extern void DrawSkeleton(CBaseEntity* entity, int color);
 extern float menuColor;
+extern void Say(char* text, int);
+extern void changeName(char* text, int originalGT);
+extern const char* GetEntityName(int WeaponID);
+extern bool(*IsInGame)();

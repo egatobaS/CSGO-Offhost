@@ -5,13 +5,19 @@ extern bool bAutoAim;
 extern bool bAimkey;
 extern bool ESPStatus;
 extern bool bSpinbot;
-extern bool bDisableEffects;
+extern bool bCompensateRecoil;
 extern bool bPrioritized[30];
 extern bool bBhop;
 extern bool bNames;
 extern bool b2DBoxes;
 extern bool bSnaplines;
 extern bool bSkeleton;
+extern bool bShowImpacts;
+extern bool bDrawWireframe;
+extern bool bDisableFog;
+extern bool bCollideWireframe;
+extern bool bDrawRenderBoxes;
+extern bool bEntityESP;
 
 struct Vars
 {
@@ -45,7 +51,21 @@ enum Submenus
 	MAIN,
 	AIMBOT,
 	ESP,
+	SAY,
+	NAMES,
+	MISC,
 	CLIENTS
+};
+
+enum Cvars
+{
+	FOV,
+	IMPACTS,
+	WIREFRAME,
+	SMOKE,
+	FOG,
+	RENDERBOXES,
+	COLLIDE
 };
 
 extern void setupMenu();

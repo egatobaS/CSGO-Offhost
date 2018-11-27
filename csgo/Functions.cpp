@@ -29,6 +29,7 @@
 //void(*ForcedMaterialOverride)(int pCModelRenderAddr, IMaterial* mat) = (void(*)(int, IMaterial*))0x86990738;
 //void(*LoadFromBuffer)(KeyValues* pKeyValues, const char* resourceName, const char* pBuffer, void* pFileSystem, const char* pPathID, void* pfnEvaluateSymbolProc) = (void(*)(KeyValues*, const char*, const char*, void*, const char*, void*))0x8853E5A8;
 //void(*InitKeyValues)(KeyValues* pKeyValues, const char* name) = (void(*)(KeyValues*, const char*))0x881A18C0;
+bool(*IsInGame)() = (bool(*)())0x8837E408;
 
 CreateInterfaceFn resolveImport(HMODULE module)
 {
@@ -104,12 +105,81 @@ bool EntityIsInvalid(CBaseEntity* Entity)
 		return true;
 	if (Entity->GetHealth() <= 0)
 		return true;
-	if (Entity->GetAlive())
-		return true;
 	if (Entity->GetDormant())
 		return true;
 
 	return false;
+}
+
+void changeNameThread()
+{
+	XOVERLAPPED XOver;
+	WCHAR wcGT[32] = { 0 };
+	char tempName[32] = { 0 };
+
+	XShowKeyboardUI(0, VKBD_LATIN_GAMERTAG | VKBD_HIGHLIGHT_TEXT, L"", L"Change Name", L"Type in the name you want to change to", wcGT, 32, &XOver);
+
+	while (!XHasOverlappedIoCompleted(&XOver))
+		Sleep(100);
+
+	wcstombs(tempName, wcGT, 32);
+
+	char name[0x150] = { 0 };
+	_snprintf(name, 0x150, "name %s;", tempName);
+	Cbuf_AddText_f(0, name, 0);
+}
+
+void sayThread()
+{
+	XOVERLAPPED XOver;
+	WCHAR wcSay[40] = { 0 };
+	char tempsay[40] = { 0 };
+
+	XShowKeyboardUI(0, VKBD_LATIN_GAMERTAG | VKBD_HIGHLIGHT_TEXT, L"", L"Say", L"Type in the text you want to say", wcSay, 40, &XOver);
+
+	while (!XHasOverlappedIoCompleted(&XOver))
+		Sleep(100);
+
+	wcstombs(tempsay, wcSay, 40);
+
+	char name[0x150] = { 0 };
+	_snprintf(name, 0x150, "say %s;", tempsay);
+	Cbuf_AddText_f(0, name, 0);
+}
+
+void Say(char* text, int sayFlag)
+{
+	if (sayFlag == 1)
+	{
+		CreateThread(0, 0, (LPTHREAD_START_ROUTINE)sayThread, 0, 0, 0);
+	}
+	else if (sayFlag == 0)
+	{
+		char sayText[0x150] = { 0 };
+		_snprintf(sayText, 0x150, "say %s;", text);
+		Cbuf_AddText_f(0, sayText, 0);
+	}
+}
+
+void changeName(char* text, int nameFlag)
+{
+	char name[0x150] = { 0 };
+	if (nameFlag == 1)
+	{
+		char pUserName[0x15] = { 0 };
+		XamUserGetName(0, pUserName, 0x15);
+		_snprintf(name, 0x150, "name %s;", pUserName);
+		Cbuf_AddText_f(0, name, 0);
+	}
+	else if (nameFlag == 2)
+	{
+		CreateThread(0, 0, (LPTHREAD_START_ROUTINE)changeNameThread, 0, 0, 0);
+	}
+	else if (nameFlag == 0)
+	{
+		_snprintf(name, 0x150, "name %s", text);
+		Cbuf_AddText_f(0, name, 0);
+	}
 }
 
 int CBaseEntity::GetHealth()
@@ -152,9 +222,16 @@ bool CBaseEntity::GetAlive()
 	return (bool)(*(int*)((DWORD)this + addr->_0x0000025B) == 0);
 }
 
+#define VectorSubtract(a,b,c) ((c)[0]=(a)[0]-(b)[0],(c)[1]=(a)[1]-(b)[1],(c)[2]=(a)[2]-(b)[2])
+
 Vector CBaseEntity::GetVelocity()
 {
-	return *(Vector*)((DWORD)this + addr->_0x00000110);
+	Vector newOrigin = *(Vector*)((DWORD)this + 0x134);
+	Vector oldOrigin = *(Vector*)((DWORD)this + 0x39C);
+	Vector ret = Vector(0, 0, 0);
+	VectorSubtract(newOrigin, oldOrigin, ret);
+
+	return ret;
 }
 
 int CBaseEntity::GetTickBase()
@@ -411,6 +488,102 @@ void renderMenu() {
 			}
 		}
 	}
-	DrawTextWithBG("xbOnline Cheats Beta v1", 0xB7, 1110, 10, 0x2C, 0x8F, 0xED, 0xFF, false, menuColor);
+	DrawTextWithBG("xbOnline Cheats Beta v1.1", 0xB7, 1100, 10, 0x2C, 0x8F, 0xED, 0xFF, false, menuColor);
 	DrawTextWithBG(MenuVars.isOpen ? "Press B to close" : "Press DPAD UP & RS to open", 0xB7, 15, 695, 0x2C, 0x8F, 0xED, 0xFF, false, menuColor);
+}
+
+const char* GetEntityName(int WeaponID) {
+	switch (WeaponID) {
+		/*pistols*/
+	case 202:
+		return "Glock-18";
+	case 196:
+		return "Dual Berettas";
+	case 215:
+		return "P250";
+	case 225:
+		return "Tec-9";
+	case 36:
+		return "Desert Eagle";
+	case 203:
+		return "P2000";
+	case 198:
+		return "Five-SeveN";
+		/*heavy*/
+	case 213:
+		return "Nova";
+	case 229:
+		return "XM1014";
+	case 217:
+		return "Sawed-Off";
+	case 204:
+		return "M249";
+	case 212:
+		return "Negev";
+	case 208:
+		return "Mag-7";
+		/*smgs*/
+	case 207:
+		return "MAC-10";
+	case 210:
+		return "MP7";
+	case 227:
+		return "UMP45";
+	case 216:
+		return "P90";
+	case 192:
+		return "PP-Bizon";
+	case 211:
+		return "MP9";
+		/*rifles*/
+	case 197:
+		return "Famas";
+	case 206:
+		return "M4A4";
+	case 223:
+		return "SSG 08";
+	case 190:
+		return "AUG";
+	case 191:
+		return "AWP";
+	case 218:
+		return "SCAR-20";
+	case 201:
+		return "Galil AR";
+	case 1:
+		return "AK-47";
+	case 222:
+		return "SG 553";
+	case 199:
+		return "G3SG1";
+		/*grenades*/
+	case 88:
+		return "Molotov";
+	case 80:
+		return "Incendiary Grenade";
+	case 78:
+		return "HE Grenade";
+	case 60:
+		return "Flashbang";
+	case 121:
+		return "Smoke Grenade";
+	case 37:
+		return "Decoy";
+		/*other*/
+	case 224:
+		return "Zeus";
+	case 27:
+		return "C4 Explosive";
+	case 99:
+		return "Bomb";
+	case 40:
+		return "Chicken";
+	case 79:
+		return "Hostage";
+	case 32:
+		return "Player";
+
+	default:
+		return "";
+	}
 }

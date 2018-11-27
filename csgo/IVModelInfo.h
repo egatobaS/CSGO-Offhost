@@ -4,6 +4,7 @@
 #define IN_JUMP					(1 << 1)
 #define IN_FORWARD				(1 << 3)
 #define	FL_ONGROUND				(1 << 0)
+#define IN_ATTACK				(1 << 0)
 
 enum Hitboxes
 {
