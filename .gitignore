@@ -8,6 +8,7 @@
 *.sln.docstates
 *.xex
 *.tlog
+*.xdb
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -72,6 +73,9 @@ artifacts/
 *.pidb
 *.svclog
 *.scc
+*.xdb
+*.exe
+*.xex
 
 # Chutzpah Test files
 _Chutzpah*
