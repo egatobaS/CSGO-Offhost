@@ -14,6 +14,7 @@ void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7)
 		{
 			__try
 			{
+				//
 				CBaseEntity* Entity = g_EntityList->GetClientEntity(i);
 				IClientNetworkable* pNetworkable;
 				ClientClass* Client;
