@@ -36,7 +36,7 @@ void addArray(const char* Name, char **Array = NULL, int ArraySize = NULL, int *
 {
 	int Index = MenuVars.optionCount[MenuIndex];
 	MenuVars.Option_Text[MenuIndex][Index] = Name;
-
+	//
 	MenuVars.Option_Function[MenuIndex][Index] = (void(*)(int, int)) Function;
 	MenuVars.Option_Toggle[MenuIndex][Index] = NULL;
 	MenuVars.Option_Param1[MenuIndex][Index] = NULL;
