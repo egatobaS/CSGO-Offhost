@@ -96,6 +96,14 @@ VMatrix& WorldToScreenMatrix_f_Real(int pVEngineClient013)
 	return WorldToScreenMatrix_f(pVEngineClient013);
 }
 
+extern "C"
+{
+	PVOID MmGetPhysicalAddress(PVOID Address);
+	UCHAR KeGetCurrentProcessType(VOID);
+	DWORD XamUserGetName(DWORD dwUserIndex, LPSTR pUserName, DWORD cchUserName);
+}
+
+
 #if defined(DEVELOPERSDEVELOPERSDEVELOPERS)
 
 
@@ -326,12 +334,6 @@ void DrawTextWithBG_Real(const char *text, int fontName, float x, float y, int r
 	DrawText(GetWC(text), fontName, x, y, r, g, b, a, centered);
 }
 
-extern "C"
-{
-	PVOID MmGetPhysicalAddress(PVOID Address);
-	UCHAR KeGetCurrentProcessType(VOID);
-	DWORD XamUserGetName(DWORD dwUserIndex, LPSTR pUserName, DWORD cchUserName);
-}
 
 FARPROC ResolveFunction(PCHAR ModuleName, DWORD Ordinal)
 {

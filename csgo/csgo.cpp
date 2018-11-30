@@ -17,12 +17,12 @@ bool Initialized = false;
 
 void mainThread()
 {
+
+
+	Sleep(10000);
 	LoadAddresses();
 
 	XNotify(L"xbOnline CSGO Cheats Loaded!\nDeveloped by Blasts Mods");
-
-	while (!GetModuleHandle("client_360.dll"))
-		Sleep(10);
 
 	PopulateVtables(&VEngineClient013,
 		&VGUI_Surface031,
