@@ -63,7 +63,7 @@ void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7)
 											DrawLineWithColor(Screen.x, Screen.y, width / 2, height - 30, espColor);
 										if (bNames)
 											DrawText(GetWC(pinfo.name), 0xB7, top.x, top.y - 17, 0xFF, 0xFF, 0xFF, 0xFF, true);
-										if (b2DBoxes)
+										if (b2DBoxes || b3DBoxes)
 										{
 											if (b3DBoxes)
 												Draw3DBox(i, Entity, espColor);
