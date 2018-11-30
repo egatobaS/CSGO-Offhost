@@ -269,6 +269,11 @@ model_t* GetModel(CBaseEntity* Entity)
 	return *(model_t**)((DWORD)Entity + addr->_0x00001AEC);
 }
 
+QAngle CBaseEntity::GetViewAngles()
+{
+	return *(QAngle*)((DWORD)this + 0xC4);
+}
+
 Vector CBaseEntity::GetEyePosition()
 {
 	Vector origin = this->GetOrigin();
@@ -304,7 +309,6 @@ Vector vectoangles(Vector Angles)
 {
 	float forward;
 	float yaw, pitch;
-	float PI = 3.1415926535897931;
 	if (Angles.x == 0 && Angles.y == 0)
 	{
 		yaw = 0;
@@ -394,6 +398,123 @@ bool CBaseEntity::IsVisible(int bone)
 ICollideable* GetCollideable(int Entety)
 {
 	return (ICollideable*)((DWORD)(Entety + 0x00000310));
+}
+
+bool GetBox(CBaseEntity* pEntity, float &x, float &y, float &w, float &h)
+{
+	// Variables
+	Vector  vOrigin, min, max, sMin, sMax, sOrigin,
+		flb, brt, blb, frt, frb, brb, blt, flt;
+	float left, top, right, bottom;
+
+	// Get the locations
+	vOrigin = pEntity->GetOrigin();
+	min = GetCollideable((int)pEntity)->OBBMins() + vOrigin;
+	max = GetCollideable((int)pEntity)->OBBMaxs() + vOrigin;
+
+	// Points of a 3d bounding box
+	Vector points[] = { Vector(min.x, min.y, min.z),
+		Vector(min.x, max.y, min.z),
+		Vector(max.x, max.y, min.z),
+		Vector(max.x, min.y, min.z),
+		Vector(max.x, max.y, max.z),
+		Vector(min.x, max.y, max.z),
+		Vector(min.x, min.y, max.z),
+		Vector(max.x, min.y, max.z) };
+
+	// Get screen positions
+	if (!WorldToScreen(points[3], flb) || !WorldToScreen(points[5], brt)
+		|| !WorldToScreen(points[0], blb) || !WorldToScreen(points[4], frt)
+		|| !WorldToScreen(points[2], frb) || !WorldToScreen(points[1], brb)
+		|| !WorldToScreen(points[6], blt) || !WorldToScreen(points[7], flt))
+		return false;
+
+	// Put them in an array (maybe start them off in one later for speed?)
+	Vector arr[] = { flb, brt, blb, frt, frb, brb, blt, flt };
+
+	// Init this shit
+	left = flb.x;
+	top = flb.y;
+	right = flb.x;
+	bottom = flb.y;
+
+	// Find the bounding corners for our box
+	for (int i = 1; i < 8; i++)
+	{
+		if (left > arr[i].x)
+			left = arr[i].x;
+		if (bottom < arr[i].y)
+			bottom = arr[i].y;
+		if (right < arr[i].x)
+			right = arr[i].x;
+		if (top > arr[i].y)
+			top = arr[i].y;
+	}
+
+	// Width / height
+	x = left;
+	y = top;
+	w = right - left;
+	h = bottom - top;
+
+	return true;
+}
+
+void Draw3DBox(int client, CBaseEntity* Entity, int col)
+{
+	IClientNetworkable* pNetworkable = g_EntityList->GetClientNetworkable(client);
+	IClientUnknown* pUnknown = pNetworkable->GetIClientUnknown();
+
+	ICollideable* coll = GetCollideable((int)Entity);
+
+	int iScreenWidth, iScreenHeight;
+	GetScreenSize(&iScreenWidth, &iScreenHeight);
+
+	Vector min = coll->OBBMins();
+	Vector max = coll->OBBMaxs();
+
+	Vector corners[8] =
+	{
+	Vector(min.x,min.y,min.z),
+	Vector(min.x,max.y,min.z),
+	Vector(max.x,max.y,min.z),
+	Vector(max.x,min.y,min.z),
+	Vector(min.x,min.y,max.z),
+	Vector(min.x,max.y,max.z),
+	Vector(max.x,max.y,max.z),
+	Vector(max.x,min.y,max.z)
+	};
+
+	float ang = Entity->GetViewAngles().y;
+
+	for (int i = 0; i <= 7; i++) corners[i].Rotate2D(ang); Vector _corners[8]; for (int i = 0; i <= 7; i++) WorldToScreen(Entity->GetOrigin() + corners[i], _corners[i]);
+
+	int x1 = iScreenWidth * 2, y1 = iScreenHeight * 2, x2 = -iScreenWidth, y2 = -iScreenHeight;
+
+	for (int i = 1; i <= 4; i++) {
+		DrawLineWithColor((int)(_corners[i - 1].x), (int)(_corners[i - 1].y), (int)(_corners[i % 4].x), (int)(_corners[i % 4].y), col); DrawLineWithColor((int)(_corners[i - 1].x), (int)(_corners[i - 1].y), (int)(_corners[i + 3].x), (int)(_corners[i + 3].y), col); DrawLineWithColor((int)(_corners[i + 3].x), (int)(_corners[i + 3].y), (int)(_corners[i % 4 + 4].x), (int)(_corners[i % 4 + 4].y), col);
+	}
+}
+
+void DrawEntity(CBaseEntity* entity, int color)
+{
+	float x, y, w, h;
+	if (GetBox(entity, x, y, w, h))
+	{
+		PlayerBox(x, y, w, h, color);
+		float health = entity->GetHealth();
+		float maxHealth = 100;
+		float offset = (h / 4.f) + 5;
+
+		UINT hp = h - (UINT)((h * health) / (maxHealth));
+
+		int Red = 255 - (health * 2.55);
+		int Green = health * 2.55;
+
+		DrawRect((x - 5) - 1, y - 1, 3, h + 2, 0x000000FF);
+
+		DrawLineWithColor(x - 5, y + hp, (x - 5), y + h, createRGBA(Red, Green, 0, 255));
+	}
 }
 
 void DrawBone(CBaseEntity* entity, int tagname1, int tagname2, int col)

@@ -276,11 +276,11 @@ void DrawBox_Real(float x, float y, float width, float height, int RGBA)
 void PlayerBox_Real(float x, float y, float w, float h, int clr)
 {
 	DrawSetColor_f(VGUI_Surface031, clr);
-	DrawOutlinedRect_f(VGUI_Surface031, x - w, y, x + w, y + h);
+	DrawOutlinedRect_f(VGUI_Surface031, x, y, x + w, y + h);
 
 	DrawSetColor_f(VGUI_Surface031, 0x000000FF);
-	DrawOutlinedRect_f(VGUI_Surface031, x - w - 1, y - 1, x + w + 1, y + h + 1);
-	DrawOutlinedRect_f(VGUI_Surface031, x - w + 1, y + 1, x + w - 1, y + h - 1);
+	DrawOutlinedRect_f(VGUI_Surface031, x - 1, y - 1, x + w + 1, y + h + 1);
+	DrawOutlinedRect_f(VGUI_Surface031, x + 1, y + 1, x + w - 1, y + h - 1);
 }
 
 XINPUT_STATE InputState;

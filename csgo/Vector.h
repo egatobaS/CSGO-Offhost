@@ -2,6 +2,8 @@
 
 #define CHECK_VALID( _v ) 0
 #define Assert( _exp ) ((void)0)
+#define PI 3.14159265358979323846f
+#define DEG2RAD( x ) ( ( float )( x ) * ( float )( ( float )( PI ) / 180.0f ) )
 
 class Vector
 {
@@ -51,6 +53,7 @@ public:
 	Vector operator-(const Vector& v) const;
 	Vector operator+(const Vector& v) const;
 	Vector operator*(const Vector& v) const;
+	void Vector::Rotate2D(const float &f);
 	Vector operator/(const Vector& v) const;
 	Vector operator*(float fl) const;
 	Vector operator/(float fl) const;
@@ -83,6 +86,27 @@ public:
 	}
 };
 
+void inline SinCos(float radians, float* sine, float* cosine)
+{
+	*sine = sin(radians);
+	*cosine = cos(radians);
+}
+
+inline void Vector::Rotate2D(const float &f)
+{
+	float _x, _y;
+
+	float s, c;
+
+	SinCos(DEG2RAD(f), &s, &c);
+
+	_x = x;
+	_y = y;
+
+	x = (_x * c) - (_y * s);
+	y = (_x * s) + (_y * c);
+}
+
 //===============================================
 inline Vector::Vector(float X, float Y, float Z)
 {
@@ -91,6 +115,8 @@ inline Vector::Vector(float X, float Y, float Z)
 	z = Z;
 	CHECK_VALID(*this);
 }
+
+inline float Vector::Length2D(void) const { return (float)sqrtf(x*x + y * y); }
 
 //===============================================
 inline Vector::Vector(void)

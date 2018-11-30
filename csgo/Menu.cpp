@@ -8,6 +8,7 @@ bool bAimkey = false;
 bool bAutoAim = false;
 bool ESPStatus = false;
 bool b2DBoxes = false;
+bool b3DBoxes = false;
 bool bSnaplines = false;
 bool bSpinbot = false;
 bool bCompensateRecoil = false;
@@ -101,13 +102,23 @@ void updateCvar(int cvar)
 		*(int*)0x886BEA04 = bCollideWireframe ? 1 : 0;
 }
 
+void setBoxes3D()
+{
+	b2DBoxes = false;
+}
+
+void setBoxes2D()
+{
+	b3DBoxes = false;
+}
+
 void setupMenu() {
 	addMenu("CSGO Menu", MAIN);
 	addOption("Aimbot Menu", NULL, openSub, AIMBOT);
 	addOption("ESP Menu", NULL, openSub, ESP);
 	addOption("Say Menu", NULL, openSub, SAY);
 	addOption("Name Menu", NULL, openSub, NAMES);
-	addOption("Misc Menu", NULL, openSub, MISC);
+	addOption("Misc Features", NULL, openSub, MISC);
 	//addOption("Client List", NULL, openSub, CLIENTS);
 
 	addMenu("Aimbot Menu", AIMBOT, 0);
@@ -120,7 +131,8 @@ void setupMenu() {
 	addMenu("ESP Menu", ESP, 0);
 	addOption("ESP Status", &ESPStatus);
 	addOption("Draw Names", &bNames);
-	addOption("Draw 2D Boxes", &b2DBoxes);
+	addOption("Draw 2D Boxes", &b2DBoxes, setBoxes2D);
+	addOption("Draw 3D Boxes", &b3DBoxes, setBoxes3D);
 	addOption("Draw Snaplines", &bSnaplines);
 	addOption("Draw Bones", &bSkeleton);
 	addOption("Draw Entities", &bEntityESP);

@@ -22,3 +22,5 @@ extern void Say(char* text, int);
 extern void changeName(char* text, int originalGT);
 extern const char* GetEntityName(int WeaponID);
 extern bool(*IsInGame)();
+extern void DrawEntity(CBaseEntity* entity, int color);
+extern void Draw3DBox(int client, CBaseEntity* Entity, int col);

@@ -18,6 +18,7 @@ extern bool bDisableFog;
 extern bool bCollideWireframe;
 extern bool bDrawRenderBoxes;
 extern bool bEntityESP;
+extern bool b3DBoxes;
 
 struct Vars
 {

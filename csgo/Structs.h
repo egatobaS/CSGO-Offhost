@@ -113,6 +113,7 @@ public:
 	int& GetXUIDHigh();
 	char* GetName();
 	ClientClass* GetClientClass();
+	QAngle GetViewAngles();
 };
 
 class IClientEntityList

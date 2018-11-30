@@ -32,6 +32,8 @@ void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7)
 						if (Origin.y == 0x00)
 							continue;
 
+						//printf("%X\n", LocalPlayer);
+
 						Vector max = GetCollideable((int)Entity)->OBBMaxs();
 						Vector top3D = Origin + Vector(0, 0, max.z);
 
@@ -62,8 +64,10 @@ void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7)
 											DrawText(GetWC(pinfo.name), 0xB7, top.x, top.y - 17, 0xFF, 0xFF, 0xFF, 0xFF, true);
 										if (b2DBoxes)
 										{
-											PlayerBox(top.x, top.y, ewidth, eheight, espColor);
-											HealthBar(Screen, top, Entity->GetHealth());
+											if (b3DBoxes)
+												Draw3DBox(i, Entity, espColor);
+											if (b2DBoxes)
+												DrawEntity(Entity, espColor);
 
 											char armorValue[0x52] = { 0 };
 											_snprintf(armorValue, 0x52, "Armor: %d", Entity->GetArmor());
