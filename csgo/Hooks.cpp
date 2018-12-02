@@ -84,7 +84,7 @@ void PaintTraverseHook(void* _this, void* unk, unsigned int vguiPanel, bool forc
 
 											char armorValue[0x52] = { 0 };
 											_snprintf(armorValue, 0x52, "Armor: %d", Entity->GetArmor());
-											DrawText(Entity->GetArmor() <= 0 ? L"Armor: 0" : GetWC(armorValue), 0xB7, top.x, Screen.y, 0xFF, 0xFF, 0xFF, 0xFF, true);
+											DrawText(Entity->GetArmor() <= 0 ? L"Armor: 0" : GetWC(armorValue), 0xB7, top.x, bottom.y, 0xFF, 0xFF, 0xFF, 0xFF, true);
 										}
 										if (bSkeleton)
 											DrawSkeleton(Entity, espColor);
