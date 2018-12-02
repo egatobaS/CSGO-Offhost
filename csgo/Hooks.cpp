@@ -2,7 +2,7 @@
 
 Detour PaintTraverseDetour;
 PaintTraverseStub PaintTraverseOriginal;
-void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7)
+void PaintTraverseHook(void* _this, void* unk, unsigned int vguiPanel, bool forceRepaint, bool allowForce)
 {
 	updateStructs();
 
@@ -10,11 +10,26 @@ void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7)
 
 	if (IsInGame())
 	{
+		int width, height;
+		GetScreenSize(&width, &height);
+
+		if (LocalPlayer->m_bIsScoped())
+		{
+			DrawLineWithColor_Real(width / 2, 0, width / 2, height, createRGBA(15, 15, 15, 255));
+			DrawLineWithColor_Real(0, height / 2, width, height / 2, createRGBA(15, 15, 15, 255));
+			*(int*)0x887232D4 = 0x00;
+			*(int*)0x8870C7A4 = 0x00;
+		}
+		else
+		{
+			*(int*)0x887232D4 = 0x01;
+			*(int*)0x8870C7A4 = 0x01;
+		}
+
 		for (int i = 0; i < g_EntityList->GetHighestEntityIndex(); i++)
 		{
 			__try
 			{
-				//
 				CBaseEntity* Entity = g_EntityList->GetClientEntity(i);
 				IClientNetworkable* pNetworkable;
 				ClientClass* Client;
@@ -27,29 +42,26 @@ void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7)
 					if (!pNetworkable->IsDormant() && Entity != LocalPlayer && strcmp(entityName, ""))
 					{
 						Vector Origin = Entity->GetOrigin();
-						Vector Screen, top;
-						int width, height;
+						Vector Screen, top, bottom;
 
 						if (Origin.y == 0x00)
 							continue;
 
-						//printf("%X\n", LocalPlayer);
-
 						Vector max = GetCollideable((int)Entity)->OBBMaxs();
+						Vector min = GetCollideable((int)Entity)->OBBMins();
 						Vector top3D = Origin + Vector(0, 0, max.z);
+						Vector bottom3D = Origin + Vector(0, 0, min.z);
 
 						if (WorldToScreen(Origin, Screen) &&
-							WorldToScreen(top3D, top))
+							WorldToScreen(top3D, top) &&
+							WorldToScreen(bottom3D, bottom))
 						{
 							float eheight = (Screen.y - top.y);
 							float ewidth = eheight / 4.f;
 
 							player_info_t pinfo;
 							if (!Entity->GetHealth() <= 0 && !Entity->GetAlive())
-							{
 								getPlayerInfo_f(VEngineClient013, i, &pinfo);
-								GetScreenSize(&width, &height);
-							}
 
 							if (ESPStatus)
 							{
@@ -94,7 +106,7 @@ void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7)
 		}
 	}
 
-	PaintTraverseOriginal(r3, r4, r5, r6, r7);
+	PaintTraverseOriginal(_this, unk, vguiPanel, forceRepaint, allowForce);
 }
 
 Detour CreateMoveDetour;
@@ -127,7 +139,7 @@ bool CreateMoveHook(int pClientModeAddr, float flInputSampleTime, CUserCmd* cmd)
 
 						if (Entity->IsVisible(5))
 						{
-							if (!bAimkey || GetAsyncKeyState(0x1337))
+							if (!bAimkey || GetAsyncKeyState(0x1337) || LocalPlayer->m_bIsScoped())
 							{
 								cmd->viewangles = aim_angle - AimPunch;
 

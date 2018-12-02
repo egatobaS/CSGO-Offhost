@@ -197,6 +197,11 @@ bool CBaseEntity::IsEnemy()
 	return (this->GetTeam() == LocalPlayer->GetTeam() || this->GetTeam() == 0) ? false : true;
 }
 
+bool CBaseEntity::m_bIsScoped()
+{
+	return *(bool*)((DWORD)this + 0x1ABC);
+}
+
 int CBaseEntity::GetFlags()
 {
 	return *(int*)((DWORD)this + addr->_0x00000100);

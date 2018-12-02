@@ -1,8 +1,8 @@
 #pragma once
 
 extern Detour PaintTraverseDetour;
-typedef void(*PaintTraverseStub)(int r3, int r4, int r5, int r6, int r7);
-extern void PaintTraverseHook(int r3, int r4, int r5, int r6, int r7);
+typedef void(*PaintTraverseStub)(void* _this, void* unk, unsigned int vguiPanel, bool forceRepaint, bool allowForce);
+extern void PaintTraverseHook(void* _this, void* unk, unsigned int vguiPanel, bool forceRepaint, bool allowForce);
 extern PaintTraverseStub PaintTraverseOriginal;;
 
 extern Detour CreateMoveDetour;

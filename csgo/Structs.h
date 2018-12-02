@@ -114,6 +114,7 @@ public:
 	char* GetName();
 	ClientClass* GetClientClass();
 	QAngle GetViewAngles();
+	bool m_bIsScoped();
 };
 
 class IClientEntityList

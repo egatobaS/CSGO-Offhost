@@ -19,7 +19,7 @@ void mainThread()
 {
 
 
-	Sleep(10000);
+	//Sleep(10000);
 	LoadAddresses();
 
 	XNotify(L"xbOnline CSGO Cheats Loaded!\nDeveloped by Blasts Mods");
@@ -94,7 +94,7 @@ void mainThread()
 			//	updatePlayerList();
 			
 
-			Sleep(3);
+			Sleep(5);
 		}
 		__except (1) {
 		}
