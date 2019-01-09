@@ -5,7 +5,7 @@
 #include <setjmp.h>
 #include <cmath>
 
-#define DEVELOPERSDEVELOPERSDEVELOPERS 1
+#define DEVELOPERSDEVELOPERSDEVELOPERS 0
 
 #include "Detour.h"
 #include "Vector.h"
@@ -26,5 +26,6 @@ extern IClientEntityList* g_EntityList;
 extern CBaseEntity* LocalPlayer;
 extern IEngineTrace* EngineTrace;
 extern IVModelInfo* ModelInfo;
+extern IBaseClientDll* Client;
 //extern IVRenderView* I::RenderView;
 //extern IVModelRender* I::ModelRender;

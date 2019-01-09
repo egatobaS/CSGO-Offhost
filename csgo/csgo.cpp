@@ -8,6 +8,7 @@ void setupHooks() {
 }
 
 IClientEntityList* g_EntityList;
+IBaseClientDll* Client;
 CBaseEntity* LocalPlayer;
 IEngineTrace* EngineTrace;
 IVModelInfo* ModelInfo;

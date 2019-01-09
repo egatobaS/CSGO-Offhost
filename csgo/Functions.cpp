@@ -341,7 +341,9 @@ void updateStructs()
 	auto engine = resolveImport(GetModuleHandleA("engine_360.dll"));
 
 	g_EntityList = (IClientEntityList*)get_interface(client, "VClientEntityList003");
+	Client = (IBaseClientDll*)get_interface(client, "VClient016");
 	EngineTrace = (IEngineTrace*)get_interface(engine, "EngineTraceClient004");
+
 
 	LocalPlayer = g_EntityList->GetClientEntity(GetLocalClientNumber());
 }

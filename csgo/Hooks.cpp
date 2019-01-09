@@ -13,17 +13,20 @@ void PaintTraverseHook(void* _this, void* unk, unsigned int vguiPanel, bool forc
 		int width, height;
 		GetScreenSize(&width, &height);
 
-		if (LocalPlayer->m_bIsScoped())
+		if (LocalPlayer)
 		{
-			DrawLineWithColor_Real(width / 2, 0, width / 2, height, createRGBA(15, 15, 15, 255));
-			DrawLineWithColor_Real(0, height / 2, width, height / 2, createRGBA(15, 15, 15, 255));
-			*(int*)0x887232D4 = 0x00;
-			*(int*)0x8870C7A4 = 0x00;
-		}
-		else
-		{
-			*(int*)0x887232D4 = 0x01;
-			*(int*)0x8870C7A4 = 0x01;
+			if (LocalPlayer->m_bIsScoped())
+			{
+				DrawLineWithColor_Real(width / 2, 0, width / 2, height, createRGBA(15, 15, 15, 255));
+				DrawLineWithColor_Real(0, height / 2, width, height / 2, createRGBA(15, 15, 15, 255));
+				*(int*)0x887232D4 = 0x00;
+				*(int*)0x8870C7A4 = 0x00;
+			}
+			else
+			{
+				*(int*)0x887232D4 = 0x01;
+				*(int*)0x8870C7A4 = 0x01;
+			}
 		}
 
 		for (int i = 0; i < g_EntityList->GetHighestEntityIndex(); i++)
@@ -113,6 +116,7 @@ Detour CreateMoveDetour;
 CreateMoveStub CreateMoveOriginal;
 bool CreateMoveHook(int pClientModeAddr, float flInputSampleTime, CUserCmd* cmd)
 {
+	printf("%X\n", Client);
 	if (IsInGame())
 	{
 		for (int i = 0; i < g_EntityList->GetHighestEntityIndex(); i++)
@@ -128,11 +132,13 @@ bool CreateMoveHook(int pClientModeAddr, float flInputSampleTime, CUserCmd* cmd)
 					Client = pNetworkable->GetClientClass();
 				}
 
+				//printf("%X\n", LocalPlayer);
+
 				if (bAimbot)
 				{
 					if (!pNetworkable->IsDormant() && !EntityIsInvalid(Entity) && Entity->IsEnemy())
 					{
-						Vector aimPos = Entity->GetPredicted(GetBonePosition((int)Entity, 5));
+						Vector aimPos = Entity->GetPredicted(GetBonePosition((int)Entity, 6));
 						Vector FinalAngles = vectoangles(aimPos - LocalPlayer->GetEyePosition());
 						QAngle aim_angle = QAngle(FinalAngles.x, FinalAngles.y, FinalAngles.z);
 						QAngle AimPunch = *(QAngle*)(&LocalPlayer->GetPunch()) * 2.f;
